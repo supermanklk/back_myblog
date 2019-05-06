@@ -78,13 +78,14 @@ class Home extends React.Component {
       .then((res)=>{
           console.log(res.data);
           for(let index in res.data){
+            const {name, country, hava_pay_id, password, phone, email} = res.data[index];
             data.push({
-              name:res.data[index].name,
-              country:res.data[index].country,
-              id:res.data[index].hava_pay_id,
-              password:res.data[index].password,
-              phone:res.data[index].phone,
-              email:res.data[index].email
+              name,
+              country,
+              hava_pay_id,
+              password,
+              phone,
+              email
             })
           }
           console.log(1111);
