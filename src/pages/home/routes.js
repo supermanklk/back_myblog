@@ -5,6 +5,7 @@ import It from './containers/it/index';
 import Imgs from './containers/imgs/index';
 import Movies from './containers/movies/index';
 import Music from './containers/music/index';
+import Welcome from './containers/welcome/index';
 import Mood from './containers/mood/index';
 import HomeNav from '../../components/homeNav/index';
 import itemDetail from '../../pages/home/containers/mood/learnHome/itemDetail/index';
@@ -23,6 +24,10 @@ const createRoutes = {
         {
             path : 'news',
             component : News 
+        },
+        {
+            path : 'welcome',
+            component : Welcome 
         },
         {
             path : 'learn',
