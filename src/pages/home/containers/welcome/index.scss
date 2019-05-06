@@ -1,0 +1,14 @@
+.welcome {
+    background: yellow;
+    text-align: center;
+    .login-form {
+        max-width: 300px!important;
+        margin: 0 auto;
+    }
+    .login-form-forgot {
+        float: right!important;
+      }
+    .login-form-button {
+        width: 100%!important;
+    }
+}

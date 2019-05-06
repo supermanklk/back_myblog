@@ -785,7 +785,7 @@ class ReturnMoney extends React.Component {
 }
 
 // export default ReturnMoney;
-
+        
 export default Dimensions({
     getHeight() {
         return window.innerHeight;
@@ -793,4 +793,4 @@ export default Dimensions({
     getWidth() {
         return window.innerWidth - 30;
     },
-})(ReturnMoney);
+})(ReturnMoney);    
