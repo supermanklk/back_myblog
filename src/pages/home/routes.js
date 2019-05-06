@@ -13,7 +13,7 @@ import OnlineMovie from '../../pages/home/containers/mood/learnHome/onlineMovie/
 
 const createRoutes = {  
     path : '/',
-    component : HomeNav, //这个是导航组件 
+    // component : HomeNav, //这个是导航组件 
     indexRoute : {component : Home}, //默认加载的组件 
     childRoutes : [   
         {
