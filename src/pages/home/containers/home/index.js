@@ -1,12 +1,17 @@
 import React from 'react'
 import './index.scss';
 import Dimensions from 'react-dimensions';
+import axios from "axios";
 import {
-    Layout, Menu, Breadcrumb, Icon,
+    Layout, Menu, Breadcrumb, Icon, Table, Divider, Tag
   } from 'antd';
   
   const { SubMenu } = Menu;
   const { Header, Content, Sider } = Layout;
+  
+
+
+
 class Home extends React.Component {
 
 
@@ -14,6 +19,51 @@ class Home extends React.Component {
         super(props);
         this.state = {
             active : '1', // 默认为1 是显示未登录的, 当为2的时候显示用户的个人中心
+            columns1 : [{
+              title: 'Name',
+              dataIndex: 'name',
+              key: 'name'
+            },{
+              title: 'Country',
+              dataIndex: 'country',
+              key: 'country'
+            }, {
+              title: 'Phone',
+              dataIndex: 'phone',
+              key: 'phone'
+            }, {
+              title: 'Email',
+              dataIndex: 'email',
+              key: 'email'
+            }, {
+              title: 'Password',
+              dataIndex: 'password',
+              key: 'password'
+            }, {
+              title: 'Id',
+              dataIndex: 'id',
+              key: 'id'
+            }],
+            data1 : [],
+            columns2 : [{
+              title: 'direction',
+              dataIndex: 'direction',
+              key: 'direction'
+            },{
+              title: 'chapter',
+              dataIndex: 'chapter',
+              key: 'chapter'
+            }, {
+              title: 'detail_direction',
+              dataIndex: 'detail_direction',
+              key: 'detail_direction'
+            }, {
+              title: 'movie_address',
+              dataIndex: 'movie_address',
+              key: 'movie_address'
+            }],
+            data2 : []
+
         }
     }
 
@@ -22,7 +72,56 @@ class Home extends React.Component {
     }
 
     componentDidMount() {
-       
+     
+      let data = [];
+      axios.get(`http://bin.mynatapp.cc/GP_MOVIE/public/index.php/api/v1.Graduation_User/getUserAll`)
+      .then((res)=>{
+          console.log(res.data);
+          for(let index in res.data){
+            data.push({
+              name:res.data[index].name,
+              country:res.data[index].country,
+              id:res.data[index].hava_pay_id,
+              password:res.data[index].password,
+              phone:res.data[index].phone,
+              email:res.data[index].email
+            })
+          }
+          console.log(1111);
+          console.log(data);
+          this.setState({
+            data1:data
+          })
+          
+      })
+      .catch((error)=>{
+          console.log(error);
+      })
+
+
+
+      let data1 = [];
+      axios.get(`http://bin.mynatapp.cc/GP_MOVIE/public/index.php/api/v1/movie`)
+      .then((res)=>{
+          console.log(res.data);
+          for(let index in res.data){
+            data1.push({
+              direction:res.data[index].direction,
+              chapter:res.data[index].chapter,
+              detail_direction:res.data[index].detail_direction,
+              movie_address:res.data[index].movie_address,
+            })
+          }
+          console.log(2222);
+          console.log(data1);
+          this.setState({
+            data2:data1
+          })
+          
+      })
+      .catch((error)=>{
+          console.log(error);
+      })
     }
 
     render() {
@@ -82,7 +181,8 @@ class Home extends React.Component {
                         background: '#fff', padding: 24, margin: 0, minHeight: 280,
                         }}
                         >
-                        Content
+                        <Table columns={this.state.columns1} dataSource={this.state.data1} />
+                        <Table columns={this.state.columns2} dataSource={this.state.data2} />
                         </Content>
                     </Layout>
                     </Layout>
