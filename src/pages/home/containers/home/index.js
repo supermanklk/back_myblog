@@ -77,12 +77,28 @@ class Home extends React.Component {
               title: 'movie_address',
               dataIndex: 'movie_address',
               key: 'movie_address'
+            },{
+              title: 'Action',
+              dataIndex: 'action',
+              key: 'action',
+              render: (text, record) => (
+                <span>
+                  <Button onClick={() => {this.showModal3(record)} }  type="primary">删除</Button>
+                  <Divider type="vertical" />
+                  <Button onClick={() => { this.showModal4(record)}}  type="primary">修改</Button>
+                  <Divider  type="vertical" />
+                </span>
+              ),
+              //每一行增加删除和修改按钮  record选中行的数据
             }],
             data2 : [],
 
             visible1 : false,// 弹出框  这个是修改的弹出框
             visible2 : false,//这个是删除的弹出框
-            List:[]  // 表单1内选择列的值
+            visible3 : false,
+            visible4 : false,
+            List:[],  // 表单1内选择列的值
+            List2:[]  //另一个表单 
 
         }
     }
@@ -91,9 +107,10 @@ class Home extends React.Component {
     handleCancel = (e) => {   //关闭弹出框按钮
       console.log(e);
       this.setState({
-        visible: false,
         visible1 : false,
-        visible2 : false
+        visible2 : false,
+        visible3 : false,
+        visible4 : false,
       });
   }
 
@@ -101,6 +118,8 @@ class Home extends React.Component {
       this.setState({
           visible1 : true,
           visible2 : false,
+          visible3 : false,
+          visible4 : false,
           List:list   
       });
     }
@@ -109,7 +128,27 @@ class Home extends React.Component {
       this.setState({
           visible1 : false,
           visible2 : true,
+          visible3 : false,
+          visible4 : false,
           List:list
+      });
+    }
+    showModal3 = (list) => {  //第二个弹出框的控制
+      this.setState({
+          visible1 : false,
+          visible2 : false,
+          visible3 : true,
+          visible4 : false,
+          List2:list
+      });
+    }
+    showModal4 = (list) => {  //第二个弹出框的控制
+      this.setState({
+          visible1 : false,
+          visible2 : false,
+          visible3 : false,
+          visible4 : true,
+          List2:list
       });
     }
 
@@ -201,7 +240,7 @@ class Home extends React.Component {
         console.log('查看视高',this.props.containerHeight);
         return (    
             <div className="home">
-            <div className="layer1"> {/* 修改的弹出框 */}
+            <div className="layer1"> {/* 删除的弹出框 */}
               <Modal
                         title="我要评论"
                         visible={this.state.visible1}
@@ -215,7 +254,7 @@ class Home extends React.Component {
                       </div>
               </Modal>
               </div>
-              <div className="layer2"> {/* 删除的弹出框 */}
+              <div className="layer2"> {/* 修改的弹出框 */}
               <Modal
                         title="我要提问"
                         visible={this.state.visible2}
@@ -255,7 +294,58 @@ class Home extends React.Component {
                       <Button style={{float:"right",marginTop:"20px"}} type="primary" shape="round"  size="large">确认修改</Button>
                       </div>
               </Modal>
-            </div> 
+            </div>
+            {/* 第二个数据表格*/}
+            <div className="layer3"> {/* 删除的弹出框 */}
+              <Modal
+                        title="我要评论"
+                        visible={this.state.visible3}
+                        onCancel={this.handleCancel}
+                        closable="true"
+                        footer={null}
+                      >
+                     <Input value={this.state.List2.courseID} />
+                      <div style={{overflow:"hidden"}}>
+                      <Button style={{float:"right",marginTop:"20px"}} type="primary" shape="round"  size="large">确认删除</Button>
+                      </div>
+              </Modal>
+              </div>
+              <div className="layer2"> {/* 修改的弹出框 */}
+              <Modal
+                        title="我要提问"
+                        visible={this.state.visible4}
+                        onCancel={this.handleCancel}
+                        closable="true"
+                        footer={null}
+                      >
+                      <Form>
+                        <Form.Item
+                          label="direction"
+                        >
+                        <Input value={this.state.List2.direction} />
+                        </Form.Item>
+                        <Form.Item
+                          label="chapter"
+                        >
+                        <Input value={this.state.List2.chapter} />
+                        </Form.Item>
+                        <Form.Item
+                          label="detail_direction"
+                        >
+                        <Input value={this.state.List2.detail_direction} />
+                        </Form.Item>
+                        <Form.Item
+                          label="movie_address"
+                        >
+                        <Input value={this.state.List2.movie_address} />
+                        </Form.Item>
+                      
+                      </Form>
+                      <div style={{overflow:"hidden"}}>
+                      <Button style={{float:"right",marginTop:"20px"}} type="primary" shape="round"  size="large">确认修改</Button>
+                      </div>
+              </Modal>
+            </div>  
                 <Layout>
                     <Header className="header">
                     <div className="logo" />
@@ -306,7 +396,7 @@ class Home extends React.Component {
                         {/* 用户 */}
                         <Table style = {{display : this.state.active1}} columns={this.state.columns1} dataSource={this.state.data1} />
                         {/* 课程 */}
-                        <Table style = {{display : this.state.active2}} columns={this.state.columns2} dataSource={this.state.data2} />
+                        <Table style = {{display : this.state.active2}} columns={this.state.columns2} dataSource={this.state.data2} scroll={{ x: 1300 }} />
                         </Content>
                     </Layout>
                     </Layout>
