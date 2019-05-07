@@ -3,7 +3,7 @@ import './index.scss';
 import Dimensions from 'react-dimensions';
 import axios from "axios";
 import {
-    Layout, Menu, Breadcrumb, Icon, Table, Divider, Tag
+    Layout, Menu, Breadcrumb, Icon, Table, Divider, Tag, Switch
   } from 'antd';
   
   const { SubMenu } = Menu;
@@ -18,6 +18,8 @@ class Home extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            active1 : 'none', // 默认不显示用户
+            active2 : '', // 默认显示课程
             active : '1', // 默认为1 是显示未登录的, 当为2的时候显示用户的个人中心
             columns1 : [{
               title: 'Name',
@@ -43,6 +45,8 @@ class Home extends React.Component {
               title: 'Id',
               dataIndex: 'id',
               key: 'id'
+            },{
+              title: 'Action', dataIndex: '', key: 'x', render: () => <a href="javascript:;">Delete</a>,
             }],
             data1 : [],
             columns2 : [{
@@ -61,7 +65,11 @@ class Home extends React.Component {
               title: 'movie_address',
               dataIndex: 'movie_address',
               key: 'movie_address'
-            }],
+            },
+            {
+              title: 'Action', dataIndex: '', key: 'x', render: () => <a href="javascript:;">Delete</a>,
+            }
+            ],
             data2 : []
 
         }
@@ -69,6 +77,31 @@ class Home extends React.Component {
 
     handleClick = (e) => {
         console.log('click ', e);
+        switch (e.key) {
+          case 'sub1':
+            // 点击了课程
+            this.setState({
+              active1 : 'none',
+              active2 : '',
+            })
+            break;
+          case 'sub2':
+            this.setState({
+              active1 : '',
+              active2 : 'none',
+            })
+            // 点击了用户
+            break;
+          case 'sub3':
+            this.setState({
+              active1 : 'none',
+              active2 : 'none',
+            })
+            // 点击了权限
+            break;
+          default:
+            break;
+        }
     }
 
     componentDidMount() {
@@ -78,13 +111,14 @@ class Home extends React.Component {
       .then((res)=>{
           console.log(res.data);
           for(let index in res.data){
+            const {name, country, hava_pay_id, password, phone, email} = res.data[index];
             data.push({
-              name:res.data[index].name,
-              country:res.data[index].country,
-              id:res.data[index].hava_pay_id,
-              password:res.data[index].password,
-              phone:res.data[index].phone,
-              email:res.data[index].email
+              name,
+              country,
+              hava_pay_id,
+              password,
+              phone,
+              email
             })
           }
           console.log(1111);
@@ -138,9 +172,9 @@ class Home extends React.Component {
                         defaultSelectedKeys={['2']}
                         style={{ lineHeight: '64px' }}
                     >
-                        <Menu.Item key="1">nav 1</Menu.Item>
-                        <Menu.Item key="2">nav 2</Menu.Item>
-                        <Menu.Item key="3">nav 3</Menu.Item>
+                        <Menu.Item key="1">主页</Menu.Item>
+                        {/* <Menu.Item key="2">nav 2</Menu.Item> */}
+                        {/* <Menu.Item key="3">nav 3</Menu.Item> */}
                     </Menu>
                     </Header>
                     <Layout>
@@ -151,38 +185,35 @@ class Home extends React.Component {
                         defaultOpenKeys={['sub1']}
                         style={{ height: '100%', borderRight: 0 }}
                         >
-                        <SubMenu key="sub1" title={<span><Icon type="user" />subnav 1</span>}>
-                            <Menu.Item key="1">option1</Menu.Item>
-                            <Menu.Item key="2">option2</Menu.Item>
-                            <Menu.Item key="3">option3</Menu.Item>
-                            <Menu.Item key="4">option4</Menu.Item>
+                        <SubMenu onTitleClick = {this.handleClick} key="sub1" title={<span><Icon type="user" />课程管理</span>}>
+                            <Menu.Item key="1">前端课程</Menu.Item>
+                            <Menu.Item key="2">后端课程</Menu.Item>
+                            <Menu.Item key="3">全栈课程</Menu.Item>
                         </SubMenu>
-                        <SubMenu key="sub2" title={<span><Icon type="laptop" />subnav 2</span>}>
-                            <Menu.Item key="5">option5</Menu.Item>
-                            <Menu.Item key="6">option6</Menu.Item>
-                            <Menu.Item key="7">option7</Menu.Item>
-                            <Menu.Item key="8">option8</Menu.Item>
+                        <SubMenu onTitleClick = {this.handleClick} key="sub2" title={<span><Icon type="laptop" />用户管理</span>}>
+                            <Menu.Item key="5">前端人员</Menu.Item>
+                            <Menu.Item key="6">后端用户</Menu.Item>
+                            <Menu.Item key="7">综合用户</Menu.Item>
                         </SubMenu>
-                        <SubMenu key="sub3" title={<span><Icon type="notification" />subnav 3</span>}>
-                            <Menu.Item key="9">option9</Menu.Item>
-                            <Menu.Item key="10">option10</Menu.Item>
-                            <Menu.Item key="11">option11</Menu.Item>
-                            <Menu.Item key="12">option12</Menu.Item>
+                        <SubMenu onTitleClick = {this.handleClick} key="sub3" title={<span><Icon type="notification" />权限授权</span>}>
+                            <Menu.Item key="9">修改权限</Menu.Item>
                         </SubMenu>
                         </Menu>
                     </Sider>
                     <Layout style={{ padding: '0 24px 24px' }}>
                         <Breadcrumb style={{ margin: '16px 0' }}>
-                        <Breadcrumb.Item>Home</Breadcrumb.Item>
-                        <Breadcrumb.Item>List</Breadcrumb.Item>
-                        <Breadcrumb.Item>App</Breadcrumb.Item>
+                        <Breadcrumb.Item>Make</Breadcrumb.Item>
+                        <Breadcrumb.Item>With</Breadcrumb.Item>
+                        <Breadcrumb.Item>Bin</Breadcrumb.Item>
                         </Breadcrumb>
                         <Content style={{
                         background: '#fff', padding: 24, margin: 0, minHeight: 280,
                         }}
                         >
-                        <Table columns={this.state.columns1} dataSource={this.state.data1} />
-                        <Table columns={this.state.columns2} dataSource={this.state.data2} />
+                        {/* 用户 */}
+                        <Table style = {{display : this.state.active1}} columns={this.state.columns1} dataSource={this.state.data1} />
+                        {/* 课程 */}
+                        <Table style = {{display : this.state.active2}} columns={this.state.columns2} dataSource={this.state.data2} />
                         </Content>
                     </Layout>
                     </Layout>
