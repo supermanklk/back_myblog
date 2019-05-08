@@ -1,9 +1,10 @@
 import React from 'react'
 import './index.scss';
 import Dimensions from 'react-dimensions';
+
 import axios from "axios";
 import {
-    Layout, Menu, Breadcrumb, Icon, Table, Divider, Tag, Switch
+    Layout, Menu, Breadcrumb, Icon, Table, Divider, Tag,Button,Modal,Input,Form
   } from 'antd';
   
   const { SubMenu } = Menu;
@@ -46,7 +47,18 @@ class Home extends React.Component {
               dataIndex: 'id',
               key: 'id'
             },{
-              title: 'Action', dataIndex: '', key: 'x', render: () => <a href="javascript:;">Delete</a>,
+              title: 'Action',
+              dataIndex: 'action',
+              key: 'action',
+              render: (text, record) => (
+                <span>
+                  <Button onClick={() => {this.showModal1(record)} }  type="primary">删除</Button>
+                  <Divider type="vertical" />
+                  <Button onClick={() => { this.showModal2(record)}}  type="primary">修改</Button>
+                  <Divider  type="vertical" />
+                </span>
+              ),
+              //每一行增加删除和修改按钮  record选中行的数据
             }],
             data1 : [],
             columns2 : [{
@@ -65,14 +77,79 @@ class Home extends React.Component {
               title: 'movie_address',
               dataIndex: 'movie_address',
               key: 'movie_address'
-            },
-            {
-              title: 'Action', dataIndex: '', key: 'x', render: () => <a href="javascript:;">Delete</a>,
-            }
-            ],
-            data2 : []
+            },{
+              title: 'Action',
+              dataIndex: 'action',
+              key: 'action',
+              render: (text, record) => (
+                <span>
+                  <Button onClick={() => {this.showModal3(record)} }  type="primary">删除</Button>
+                  <Divider type="vertical" />
+                  <Button onClick={() => { this.showModal4(record)}}  type="primary">修改</Button>
+                  <Divider  type="vertical" />
+                </span>
+              ),
+              //每一行增加删除和修改按钮  record选中行的数据
+            }],
+            data2 : [],
+
+            visible1 : false,// 弹出框  这个是修改的弹出框
+            visible2 : false,//这个是删除的弹出框
+            visible3 : false,
+            visible4 : false,
+            List:[],  // 表单1内选择列的值
+            List2:[]  //另一个表单 
 
         }
+    }
+
+
+    handleCancel = (e) => {   //关闭弹出框按钮
+      console.log(e);
+      this.setState({
+        visible1 : false,
+        visible2 : false,
+        visible3 : false,
+        visible4 : false,
+      });
+  }
+
+  showModal1 = (list) => {  //第一个弹出框的控制
+      this.setState({
+          visible1 : true,
+          visible2 : false,
+          visible3 : false,
+          visible4 : false,
+          List:list   
+      });
+    }
+
+    showModal2 = (list) => {  //第二个弹出框的控制
+      this.setState({
+          visible1 : false,
+          visible2 : true,
+          visible3 : false,
+          visible4 : false,
+          List:list
+      });
+    }
+    showModal3 = (list) => {  //第二个弹出框的控制
+      this.setState({
+          visible1 : false,
+          visible2 : false,
+          visible3 : true,
+          visible4 : false,
+          List2:list
+      });
+    }
+    showModal4 = (list) => {  //第二个弹出框的控制
+      this.setState({
+          visible1 : false,
+          visible2 : false,
+          visible3 : false,
+          visible4 : true,
+          List2:list
+      });
     }
 
     handleClick = (e) => {
@@ -162,7 +239,113 @@ class Home extends React.Component {
         console.log('查看视宽',this.props.containerWidth);
         console.log('查看视高',this.props.containerHeight);
         return (    
-            <div className="home"> 
+            <div className="home">
+            <div className="layer1"> {/* 删除的弹出框 */}
+              <Modal
+                        title="我要评论"
+                        visible={this.state.visible1}
+                        onCancel={this.handleCancel}
+                        closable="true"
+                        footer={null}
+                      >
+                     <Input value={this.state.List.id} />
+                      <div style={{overflow:"hidden"}}>
+                      <Button style={{float:"right",marginTop:"20px"}} type="primary" shape="round"  size="large">确认删除</Button>
+                      </div>
+              </Modal>
+              </div>
+              <div className="layer2"> {/* 修改的弹出框 */}
+              <Modal
+                        title="我要提问"
+                        visible={this.state.visible2}
+                        onCancel={this.handleCancel}
+                        closable="true"
+                        footer={null}
+                      >
+                      <Form>
+                        <Form.Item
+                          label="name"
+                        >
+                        <Input value={this.state.List.name} />
+                        </Form.Item>
+                        <Form.Item
+                          label="Country"
+                        >
+                        <Input value={this.state.List.country} />
+                        </Form.Item>
+                        <Form.Item
+                          label="Phone"
+                        >
+                        <Input value={this.state.List.phone} />
+                        </Form.Item>
+                        <Form.Item
+                          label="Emai"
+                        >
+                        <Input value={this.state.List.email} />
+                        </Form.Item>
+                        <Form.Item
+                          label="Password"
+                        >
+                        <Input value={this.state.List.password} />
+                        </Form.Item>
+                      
+                      </Form>
+                      <div style={{overflow:"hidden"}}>
+                      <Button style={{float:"right",marginTop:"20px"}} type="primary" shape="round"  size="large">确认修改</Button>
+                      </div>
+              </Modal>
+            </div>
+            {/* 第二个数据表格*/}
+            <div className="layer3"> {/* 删除的弹出框 */}
+              <Modal
+                        title="我要评论"
+                        visible={this.state.visible3}
+                        onCancel={this.handleCancel}
+                        closable="true"
+                        footer={null}
+                      >
+                     <Input value={this.state.List2.courseID} />
+                      <div style={{overflow:"hidden"}}>
+                      <Button style={{float:"right",marginTop:"20px"}} type="primary" shape="round"  size="large">确认删除</Button>
+                      </div>
+              </Modal>
+              </div>
+              <div className="layer2"> {/* 修改的弹出框 */}
+              <Modal
+                        title="我要提问"
+                        visible={this.state.visible4}
+                        onCancel={this.handleCancel}
+                        closable="true"
+                        footer={null}
+                      >
+                      <Form>
+                        <Form.Item
+                          label="direction"
+                        >
+                        <Input value={this.state.List2.direction} />
+                        </Form.Item>
+                        <Form.Item
+                          label="chapter"
+                        >
+                        <Input value={this.state.List2.chapter} />
+                        </Form.Item>
+                        <Form.Item
+                          label="detail_direction"
+                        >
+                        <Input value={this.state.List2.detail_direction} />
+                        </Form.Item>
+                        <Form.Item
+                          label="movie_address"
+                        >
+                        <Input value={this.state.List2.movie_address} />
+                        </Form.Item>
+                      
+                      </Form>
+                      <div style={{overflow:"hidden"}}>
+                      <Button style={{float:"right",marginTop:"20px"}} type="primary" shape="round"  size="large">确认修改</Button>
+                      </div>
+              </Modal>
+            </div>  
                 <Layout>
                     <Header className="header">
                     <div className="logo" />
@@ -213,7 +396,7 @@ class Home extends React.Component {
                         {/* 用户 */}
                         <Table style = {{display : this.state.active1}} columns={this.state.columns1} dataSource={this.state.data1} />
                         {/* 课程 */}
-                        <Table style = {{display : this.state.active2}} columns={this.state.columns2} dataSource={this.state.data2} />
+                        <Table style = {{display : this.state.active2}} columns={this.state.columns2} dataSource={this.state.data2} scroll={{ x: 1300 }} />
                         </Content>
                     </Layout>
                     </Layout>
