@@ -87,6 +87,8 @@ class Home extends React.Component {
                   <Divider type="vertical" />
                   <Button onClick={() => { this.showModal4(record)}}  type="primary">修改</Button>
                   <Divider  type="vertical" />
+                  <Button onClick={() => { this.showModal5()}}  type="primary">添加</Button>
+                  <Divider  type="vertical" />
                 </span>
               ),
               //每一行增加删除和修改按钮  record选中行的数据
@@ -97,8 +99,9 @@ class Home extends React.Component {
             visible2 : false,//这个是删除的弹出框
             visible3 : false,
             visible4 : false,
+            visible5 : false,  //添加课程的弹出框
             List:[],  // 表单1内选择列的值
-            List2:[]  //另一个表单 
+            List2:[],  //另一个表单
 
         }
     }
@@ -111,6 +114,7 @@ class Home extends React.Component {
         visible2 : false,
         visible3 : false,
         visible4 : false,
+        visible5 : false,
       });
   }
 
@@ -120,6 +124,7 @@ class Home extends React.Component {
           visible2 : false,
           visible3 : false,
           visible4 : false,
+          visible5 : false,
           List:list   
       });
     }
@@ -130,6 +135,7 @@ class Home extends React.Component {
           visible2 : true,
           visible3 : false,
           visible4 : false,
+          visible5 : false,
           List:list
       });
     }
@@ -139,6 +145,7 @@ class Home extends React.Component {
           visible2 : false,
           visible3 : true,
           visible4 : false,
+          visible5 : false,
           List2:list
       });
     }
@@ -148,7 +155,17 @@ class Home extends React.Component {
           visible2 : false,
           visible3 : false,
           visible4 : true,
+          visible5 : false,
           List2:list
+      });
+    }
+    showModal5 = () => {  //第二个弹出框的控制
+      this.setState({
+          visible1 : false,
+          visible2 : false,
+          visible3 : false,
+          visible4 : false,
+          visible5 : true,
       });
     }
 
@@ -198,8 +215,6 @@ class Home extends React.Component {
               email
             })
           }
-          console.log(1111);
-          console.log(data);
           this.setState({
             data1:data
           })
@@ -223,8 +238,6 @@ class Home extends React.Component {
               movie_address:res.data[index].movie_address,
             })
           }
-          console.log(2222);
-          console.log(data1);
           this.setState({
             data2:data1
           })
@@ -242,7 +255,7 @@ class Home extends React.Component {
             <div className="home">
             <div className="layer1"> {/* 删除的弹出框 */}
               <Modal
-                        title="我要评论"
+                        title="删除"
                         visible={this.state.visible1}
                         onCancel={this.handleCancel}
                         closable="true"
@@ -256,7 +269,7 @@ class Home extends React.Component {
               </div>
               <div className="layer2"> {/* 修改的弹出框 */}
               <Modal
-                        title="我要提问"
+                        title="修改"
                         visible={this.state.visible2}
                         onCancel={this.handleCancel}
                         closable="true"
@@ -298,7 +311,7 @@ class Home extends React.Component {
             {/* 第二个数据表格*/}
             <div className="layer3"> {/* 删除的弹出框 */}
               <Modal
-                        title="我要评论"
+                        title="删除"
                         visible={this.state.visible3}
                         onCancel={this.handleCancel}
                         closable="true"
@@ -310,9 +323,9 @@ class Home extends React.Component {
                       </div>
               </Modal>
               </div>
-              <div className="layer2"> {/* 修改的弹出框 */}
+              <div className="layer4"> {/* 修改的弹出框 */}
               <Modal
-                        title="我要提问"
+                        title="修改"
                         visible={this.state.visible4}
                         onCancel={this.handleCancel}
                         closable="true"
@@ -343,6 +356,77 @@ class Home extends React.Component {
                       </Form>
                       <div style={{overflow:"hidden"}}>
                       <Button style={{float:"right",marginTop:"20px"}} type="primary" shape="round"  size="large">确认修改</Button>
+                      </div>
+              </Modal>
+            </div> 
+            <div className="layer5"> {/* 添加课程的弹出框*/}
+              <Modal
+                        title="添加"
+                        visible={this.state.visible5}
+                        onCancel={this.handleCancel}
+                        closable="true"
+                        footer={null}
+                      >
+                      <Form>
+                        <Form.Item
+                          label="level"
+                        >
+                        <Input name='level' />
+                        </Form.Item>
+                        <Form.Item
+                          label="courseID"
+                        >
+                        <Input name='courseID' />
+                        </Form.Item>
+                        <Form.Item
+                          label='direction'
+                        >
+                        <Input name='direction' />
+                        </Form.Item>
+                        <Form.Item
+                          label="price"
+                        >
+                        <Input name='price' />
+                        </Form.Item>
+                        <Form.Item
+                          label="chapter"
+                        >
+                        <Input name='chapter' />
+                        </Form.Item>
+                        <Form.Item
+                          label='position'
+                        >
+                        <Input name='position' />
+                        </Form.Item>
+                        <Form.Item
+                          label='movie_address'
+                        >
+                        <Input name='movie_address' />
+                        </Form.Item>
+                        <Form.Item
+                          label='is_main'
+                        >
+                        <Input name='is_main' />
+                        </Form.Item>
+                        <Form.Item
+                          label='img_url'
+                        >
+                        <Input name='img_url' />
+                        </Form.Item>
+                        <Form.Item
+                          label='detail_direction'
+                        >
+                        <Input name='detail_direction' />
+                        </Form.Item>
+                        <Form.Item
+                          label='chapter_num'
+                        >
+                        <Input name='chapter_num' />
+                        </Form.Item>
+                      
+                      </Form>
+                      <div style={{overflow:"hidden"}}>
+                      <Button style={{float:"right",marginTop:"20px"}} type="primary" shape="round"  size="large">确认添加</Button>
                       </div>
               </Modal>
             </div>  
