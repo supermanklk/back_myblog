@@ -169,6 +169,16 @@ class Home extends React.Component {
       });
     }
 
+    delUser = (user) =>{  //删除用户
+      axios.get(`http://bin.mynatapp.cc/GP_MOVIE/public/index.php/api/v1.Graduation_User/deleteUserInfo?phone=17637794444/${user}`)
+      .then((res)=>{
+          console.log(res);
+          })
+      .catch((error)=>{
+          console.log(error);
+      })
+    }
+
     handleClick = (e) => {
         console.log('click ', e);
         switch (e.key) {
@@ -261,9 +271,9 @@ class Home extends React.Component {
                         closable="true"
                         footer={null}
                       >
-                     <Input value={this.state.List.id} />
+                     <Input value={this.state.List.phone} />
                       <div style={{overflow:"hidden"}}>
-                      <Button style={{float:"right",marginTop:"20px"}} type="primary" shape="round"  size="large">确认删除</Button>
+                      <Button  onClick={() => {this.delUser(this.state.List.phone)}}  style={{float:"right",marginTop:"20px"}} type="primary" shape="round"  size="large">确认删除</Button>
                       </div>
               </Modal>
               </div>
