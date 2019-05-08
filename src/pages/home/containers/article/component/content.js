@@ -2,6 +2,10 @@ import React, { Component } from 'react';
 import { Card,Icon,List,Avatar, Button} from 'antd';
 export default class MainContent extends Component {
 
+    lookOrder = () => {
+        alert(66);
+    }
+
     render(){
         const data = [
             {
@@ -35,7 +39,7 @@ export default class MainContent extends Component {
             <div className="MainContent">
             <Card 
             title={<p style={{display:"inline-block"}}><span>账号绑定</span>&nbsp;&nbsp;&nbsp;&nbsp;<span style={{fontSize:"10px",color:"#CDC1C5"}}>完成</span><span style={{fontSize:"10px",color:"red"}}>3/4</span></p>}
-            extra={<a href="#" style={{color:"#CDC1C5"}}><Icon type="question-circle" theme="twoTone" />  常见问题</a>} 
+            extra={<a href="#" style={{color:"#CDC1C5"}}><Icon onClick = {this.lookOrder} type="question-circle" theme="twoTone" />  查看订单</a>} 
             bordered={false} 
             >
                <List
