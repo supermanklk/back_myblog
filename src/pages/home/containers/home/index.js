@@ -1,5 +1,6 @@
 import React from 'react'
 import './index.scss';
+import { hashHistory } from 'react-router'
 import Dimensions from 'react-dimensions';
 
 import axios from "axios";
@@ -19,19 +20,20 @@ class Home extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            deletePhone : '', // 将要删除的用户
             active1 : 'none', // 默认不显示用户
             active2 : '', // 默认显示课程
             active : '1', // 默认为1 是显示未登录的, 当为2的时候显示用户的个人中心
             columns1 : [{
-              title: 'Name',
+              title: '姓名',
               dataIndex: 'name',
               key: 'name'
             },{
-              title: 'Country',
+              title: '城市',
               dataIndex: 'country',
               key: 'country'
             }, {
-              title: 'Phone',
+              title: '账号/手机号',
               dataIndex: 'phone',
               key: 'phone'
             }, {
@@ -39,15 +41,15 @@ class Home extends React.Component {
               dataIndex: 'email',
               key: 'email'
             }, {
-              title: 'Password',
+              title: '密码',
               dataIndex: 'password',
               key: 'password'
             }, {
-              title: 'Id',
+              title: 'id',
               dataIndex: 'id',
               key: 'id'
             },{
-              title: 'Action',
+              title: '操作',
               dataIndex: 'action',
               key: 'action',
               render: (text, record) => (
@@ -62,23 +64,23 @@ class Home extends React.Component {
             }],
             data1 : [],
             columns2 : [{
-              title: 'direction',
+              title: '课程名字',
               dataIndex: 'direction',
               key: 'direction'
             },{
-              title: 'chapter',
+              title: '章节',
               dataIndex: 'chapter',
               key: 'chapter'
             }, {
-              title: 'detail_direction',
+              title: '课程详情描述',
               dataIndex: 'detail_direction',
               key: 'detail_direction'
             }, {
-              title: 'movie_address',
+              title: '课程地址',
               dataIndex: 'movie_address',
               key: 'movie_address'
             },{
-              title: 'Action',
+              title: '操作',
               dataIndex: 'action',
               key: 'action',
               render: (text, record) => (
@@ -119,13 +121,16 @@ class Home extends React.Component {
   }
 
   showModal1 = (list) => {  //第一个弹出框的控制
+    let phone = list.phone;
       this.setState({
           visible1 : true,
           visible2 : false,
           visible3 : false,
           visible4 : false,
           visible5 : false,
-          List:list   
+          List:list ,
+          deletePhone : phone
+
       });
     }
 
@@ -208,8 +213,8 @@ class Home extends React.Component {
         }
     }
 
-    componentDidMount() {
-     
+
+    getUserAll = () => {
       let data = [];
       axios.get(`http://bin.mynatapp.cc/GP_MOVIE/public/index.php/api/v1.Graduation_User/getUserAll`)
       .then((res)=>{
@@ -233,6 +238,18 @@ class Home extends React.Component {
       .catch((error)=>{
           console.log(error);
       })
+    }
+
+    componentDidMount() {
+      // 首先去检查用户是否为非法登录
+      if(!localStorage.getItem('account')) {
+        // 说明用户没有登录,则跳转到登录页面
+        hashHistory.push({
+          pathname: '/welcome',
+        });
+      }
+     
+     this.getUserAll();
 
 
 
@@ -258,12 +275,45 @@ class Home extends React.Component {
       })
     }
 
+    deleteUser = () => {
+      // 请求接口 传递phone  删除用户 并更新数据
+      axios.get(`http://bin.mynatapp.cc/GP_MOVIE/public/index.php/api/v1.Graduation_User/deleteUserInfo?phone=${this.state.deletePhone}`)
+      .then((res) => {
+        if(res['data']['code'] == 200) {
+          // 说明删除成功
+          // 隐藏
+          this.setState({
+            visible1 : false
+          },() => {
+            // 更新数据
+            this.getUserAll();
+          })
+        } else {
+          // 用户不存在
+        }
+        
+      })
+      .catch((error) => {
+
+      })
+    }
+ 
+    outUser = () => {
+      // 退出管理后台
+      // 清除缓存
+      sessionStorage.clear(); 
+      hashHistory.push({
+        pathname: '/welcome',
+      });
+    }
+
     render() {
         console.log('查看视宽',this.props.containerWidth);
         console.log('查看视高',this.props.containerHeight);
         return (    
             <div className="home">
             <div className="layer1"> {/* 删除的弹出框 */}
+              {/* 用户删除的弹窗 */}
               <Modal
                         title="删除"
                         visible={this.state.visible1}
@@ -271,15 +321,16 @@ class Home extends React.Component {
                         closable="true"
                         footer={null}
                       >
-                     <Input value={this.state.List.phone} />
                       <div style={{overflow:"hidden"}}>
-                      <Button  onClick={() => {this.delUser(this.state.List.phone)}}  style={{float:"right",marginTop:"20px"}} type="primary" shape="round"  size="large">确认删除</Button>
+                      <Button style={{float:"right",marginTop:"20px"}}  onClick = {this.deleteUser} type="primary" shape="round"  size="large">确认删除</Button>
+
                       </div>
               </Modal>
               </div>
               <div className="layer2"> {/* 修改的弹出框 */}
+              {/* 用户修改的弹窗 */}
               <Modal
-                        title="修改"
+                        title="修改用户信息"
                         visible={this.state.visible2}
                         onCancel={this.handleCancel}
                         closable="true"
@@ -320,6 +371,7 @@ class Home extends React.Component {
             </div>
             {/* 第二个数据表格*/}
             <div className="layer3"> {/* 删除的弹出框 */}
+              {/* 课程删除的弹窗 */}
               <Modal
                         title="删除"
                         visible={this.state.visible3}
@@ -333,9 +385,10 @@ class Home extends React.Component {
                       </div>
               </Modal>
               </div>
-              <div className="layer4"> {/* 修改的弹出框 */}
+              <div className="layer2"> {/* 修改的弹出框 */}
+              {/* 课程的修改弹窗 */}
               <Modal
-                        title="修改"
+                        title="修改数据"
                         visible={this.state.visible4}
                         onCancel={this.handleCancel}
                         closable="true"
@@ -343,24 +396,24 @@ class Home extends React.Component {
                       >
                       <Form>
                         <Form.Item
-                          label="direction"
+                          label="课程名字"
                         >
                         <Input value={this.state.List2.direction} />
                         </Form.Item>
                         <Form.Item
-                          label="chapter"
+                          label="章节"
                         >
                         <Input value={this.state.List2.chapter} />
                         </Form.Item>
                         <Form.Item
-                          label="detail_direction"
+                          label="详细描述"
                         >
                         <Input value={this.state.List2.detail_direction} />
                         </Form.Item>
                         <Form.Item
-                          label="movie_address"
+                          label="课程地址"
                         >
-                        <Input value={this.state.List2.movie_address} />
+                        <Input value={decodeURIComponent(this.state.List2.movie_address)} />
                         </Form.Item>
                       
                       </Form>
@@ -450,7 +503,7 @@ class Home extends React.Component {
                         style={{ lineHeight: '64px' }}
                     >
                         <Menu.Item key="1">主页</Menu.Item>
-                        {/* <Menu.Item key="2">nav 2</Menu.Item> */}
+                        <Menu.Item key="2" onClick = {this.outUser}>退出</Menu.Item>
                         {/* <Menu.Item key="3">nav 3</Menu.Item> */}
                     </Menu>
                     </Header>
