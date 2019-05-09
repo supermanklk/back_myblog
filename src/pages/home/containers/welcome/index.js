@@ -44,7 +44,7 @@ class Welcome extends React.Component {
         if(account == '123456' && password == '413564') {
             // 说明账号密码正确
             // 路由到home页面
-            localStorage.setItem('account','123456');
+            localStorage.setItem('account',account);
             message.success('欢迎管理员进入系统!');
             setTimeout(() => {
                 // 并设置个本地缓存
