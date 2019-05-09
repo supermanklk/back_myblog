@@ -89,6 +89,8 @@ class Home extends React.Component {
                   <Divider type="vertical" />
                   <Button onClick={() => { this.showModal4(record)}}  type="primary">修改</Button>
                   <Divider  type="vertical" />
+                  <Button onClick={() => { this.showModal5()}}  type="primary">添加</Button>
+                  <Divider  type="vertical" />
                 </span>
               ),
               //每一行增加删除和修改按钮  record选中行的数据
@@ -99,8 +101,9 @@ class Home extends React.Component {
             visible2 : false,//这个是删除的弹出框
             visible3 : false,
             visible4 : false,
+            visible5 : false,  //添加课程的弹出框
             List:[],  // 表单1内选择列的值
-            List2:[]  //另一个表单 
+            List2:[],  //另一个表单
 
         }
     }
@@ -113,6 +116,7 @@ class Home extends React.Component {
         visible2 : false,
         visible3 : false,
         visible4 : false,
+        visible5 : false,
       });
   }
 
@@ -123,8 +127,10 @@ class Home extends React.Component {
           visible2 : false,
           visible3 : false,
           visible4 : false,
+          visible5 : false,
           List:list ,
           deletePhone : phone
+
       });
     }
 
@@ -134,6 +140,7 @@ class Home extends React.Component {
           visible2 : true,
           visible3 : false,
           visible4 : false,
+          visible5 : false,
           List:list
       });
     }
@@ -143,6 +150,7 @@ class Home extends React.Component {
           visible2 : false,
           visible3 : true,
           visible4 : false,
+          visible5 : false,
           List2:list
       });
     }
@@ -152,8 +160,28 @@ class Home extends React.Component {
           visible2 : false,
           visible3 : false,
           visible4 : true,
+          visible5 : false,
           List2:list
       });
+    }
+    showModal5 = () => {  //第二个弹出框的控制
+      this.setState({
+          visible1 : false,
+          visible2 : false,
+          visible3 : false,
+          visible4 : false,
+          visible5 : true,
+      });
+    }
+
+    delUser = (user) =>{  //删除用户
+      axios.get(`http://bin.mynatapp.cc/GP_MOVIE/public/index.php/api/v1.Graduation_User/deleteUserInfo?phone=17637794444/${user}`)
+      .then((res)=>{
+          console.log(res);
+          })
+      .catch((error)=>{
+          console.log(error);
+      })
     }
 
     handleClick = (e) => {
@@ -202,8 +230,6 @@ class Home extends React.Component {
               email
             })
           }
-          console.log(1111);
-          console.log(data);
           this.setState({
             data1:data
           })
@@ -239,8 +265,6 @@ class Home extends React.Component {
               movie_address:res.data[index].movie_address,
             })
           }
-          console.log(2222);
-          console.log(data1);
           this.setState({
             data2:data1
           })
@@ -299,6 +323,7 @@ class Home extends React.Component {
                       >
                       <div style={{overflow:"hidden"}}>
                       <Button style={{float:"right",marginTop:"20px"}}  onClick = {this.deleteUser} type="primary" shape="round"  size="large">确认删除</Button>
+
                       </div>
               </Modal>
               </div>
@@ -394,6 +419,77 @@ class Home extends React.Component {
                       </Form>
                       <div style={{overflow:"hidden"}}>
                       <Button style={{float:"right",marginTop:"20px"}} type="primary" shape="round"  size="large">确认修改</Button>
+                      </div>
+              </Modal>
+            </div> 
+            <div className="layer5"> {/* 添加课程的弹出框*/}
+              <Modal
+                        title="添加"
+                        visible={this.state.visible5}
+                        onCancel={this.handleCancel}
+                        closable="true"
+                        footer={null}
+                      >
+                      <Form>
+                        <Form.Item
+                          label="level"
+                        >
+                        <Input name='level' />
+                        </Form.Item>
+                        <Form.Item
+                          label="courseID"
+                        >
+                        <Input name='courseID' />
+                        </Form.Item>
+                        <Form.Item
+                          label='direction'
+                        >
+                        <Input name='direction' />
+                        </Form.Item>
+                        <Form.Item
+                          label="price"
+                        >
+                        <Input name='price' />
+                        </Form.Item>
+                        <Form.Item
+                          label="chapter"
+                        >
+                        <Input name='chapter' />
+                        </Form.Item>
+                        <Form.Item
+                          label='position'
+                        >
+                        <Input name='position' />
+                        </Form.Item>
+                        <Form.Item
+                          label='movie_address'
+                        >
+                        <Input name='movie_address' />
+                        </Form.Item>
+                        <Form.Item
+                          label='is_main'
+                        >
+                        <Input name='is_main' />
+                        </Form.Item>
+                        <Form.Item
+                          label='img_url'
+                        >
+                        <Input name='img_url' />
+                        </Form.Item>
+                        <Form.Item
+                          label='detail_direction'
+                        >
+                        <Input name='detail_direction' />
+                        </Form.Item>
+                        <Form.Item
+                          label='chapter_num'
+                        >
+                        <Input name='chapter_num' />
+                        </Form.Item>
+                      
+                      </Form>
+                      <div style={{overflow:"hidden"}}>
+                      <Button style={{float:"right",marginTop:"20px"}} type="primary" shape="round"  size="large">确认添加</Button>
                       </div>
               </Modal>
             </div>  
